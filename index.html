@@ -1,98 +1,147 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="UTF-8">
-<title>Dashboard บุคลากรโรงเรียน</title>
+  <meta charset="UTF-8">
+  <title>Dashboard บุคลากรโรงเรียน</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<style>
-  body {
-    font-family: "Prompt", sans-serif;
-    background: #f4f6f9;
-    margin: 0;
-    padding: 30px;
-  }
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, sans-serif;
+      background: #f5f7fb;
+      color: #1f2937;
+    }
 
-  h1 {
-    margin-bottom: 20px;
-  }
+    .container {
+      max-width: 900px;
+      margin: auto;
+      padding: 20px;
+    }
 
-  .cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
-    gap: 20px;
-  }
+    h1 {
+      font-size: 22px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
 
-  .card {
-    background: white;
-    padding: 20px;
-    border-radius: 16px;
-    box-shadow: 0 6px 18px rgba(0,0,0,.08);
-  }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 15px;
+      margin-bottom: 30px;
+    }
 
-  .card h2 {
-    margin: 0;
-    font-size: 18px;
-    color: #555;
-  }
+    .card {
+      background: white;
+      border-radius: 14px;
+      padding: 16px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+      text-align: center;
+    }
 
-  .card p {
-    font-size: 36px;
-    margin: 10px 0 0;
-    font-weight: bold;
-  }
+    .card h3 {
+      font-size: 14px;
+      color: #6b7280;
+      margin-bottom: 8px;
+    }
 
-  canvas {
-    margin-top: 40px;
-    background: white;
-    border-radius: 16px;
-    padding: 20px;
-  }
-</style>
+    .card p {
+      font-size: 28px;
+      font-weight: bold;
+      margin: 0;
+    }
+
+    .chart-box {
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+    }
+
+    .chart-container {
+      max-width: 700px;
+      height: 320px;
+      margin: auto;
+    }
+  </style>
 </head>
 
 <body>
+  <div class="container">
 
-<h1>📊 Dashboard บุคลากรโรงเรียน</h1>
+    <h1>📊บุคลากรโรงเรียน</h1>
 
-<div class="cards">
-  <div class="card"><h2>ผู้บริหาร</h2><p id="admin">-</p></div>
-  <div class="card"><h2>ข้าราชการครู</h2><p id="gov">-</p></div>
-  <div class="card"><h2>พนักงานราชการ</h2><p id="contract">-</p></div>
-  <div class="card"><h2>ครูอัตราจ้าง</h2><p id="temp">-</p></div>
-  <div class="card"><h2>บุคลากรทางการศึกษา</h2><p id="staff">-</p></div>
-</div>
+    <!-- การ์ดตัวเลข -->
+    <div class="cards">
+      <div class="card">
+        <h3>ผู้บริหาร</h3>
+        <p id="admin">-</p>
+      </div>
+      <div class="card">
+        <h3>ข้าราชการครู</h3>
+        <p id="government">-</p>
+      </div>
+      <div class="card">
+        <h3>พนักงานราชการ</h3>
+        <p id="contract">-</p>
+      </div>
+      <div class="card">
+        <h3>ครูอัตราจ้าง</h3>
+        <p id="temporary">-</p>
+      </div>
+      <div class="card">
+        <h3>บุคลากรทางการศึกษา</h3>
+        <p id="staff">-</p>
+      </div>
+    </div>
 
-<canvas id="chart" height="120"></canvas>
+    <!-- กราฟแท่ง -->
+    <div class="chart-box">
+      <div class="chart-container">
+        <canvas id="staffBarChart"></canvas>
+      </div>
+    </div>
 
-<script>
-fetch("https://script.google.com/macros/s/AKfycbwcVcXDJWibE6MCmzuwZHW8rMZsStqbFx0yoGrTy-zJxM_iXZbRycaQ1In8kSNHwa4a/exec")
-  .then(res => res.json())
-  .then(data => {
-    document.getElementById("admin").innerText = data.admin;
-    document.getElementById("gov").innerText = data.government;
-    document.getElementById("contract").innerText = data.contract;
-    document.getElementById("temp").innerText = data.temporary;
-    document.getElementById("staff").innerText = data.staff;
+  </div>
 
-    new Chart(document.getElementById("chart"), {
-      type: "pie",
-      data: {
-        labels: ["ผู้บริหาร","ข้าราชการ","พนักงานราชการ","ครูอัตราจ้าง","บุคลากร"],
-        datasets: [{
-          data: [
-            data.admin,
-            data.government,
-            data.contract,
-            data.temporary,
-            data.staff
-          ]
-        }]
-      }
-    });
-  });
-</script>
+  <script>
+    // 🔴 ใส่ URL Web App จาก Google Apps Script ตรงนี้
+    const API_URL = "1c9PMt1hGthQD2Age419O3ztOHqldLDD8_Ng8whzetOM";
 
-</body>
-</html>
+    fetch(API_URL)
+      .then(res => res.json())
+      .then(data => {
+
+        // ใส่ตัวเลขลงการ์ด
+        document.getElementById("admin").innerText = data.admin;
+        document.getElementById("government").innerText = data.government;
+        document.getElementById("contract").innerText = data.contract;
+        document.getElementById("temporary").innerText = data.temporary;
+        document.getElementById("staff").innerText = data.staff;
+
+        // สร้างกราฟแท่ง
+        const ctx = document.getElementById("staffBarChart");
+
+        new Chart(ctx, {
+          type: "bar",
+          data: {
+            labels: [
+              "ผู้บริหาร",
+              "ข้าราชการ",
+              "พนักงานราชการ",
+              "ครูอัตราจ้าง",
+              "บุคลากรทางการศึกษา"
+            ],
+            datasets: [{
+              label: "จำนวนบุคลากร (คน)",
+              data: [
+                data.admin,
+                data.government,
+                data.contract,
+                data.tempora
