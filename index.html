@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>Dashboard บุคลากรโรงเรียน</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+  body {
+    font-family: "Prompt", sans-serif;
+    background: #f4f6f9;
+    margin: 0;
+    padding: 30px;
+  }
+
+  h1 {
+    margin-bottom: 20px;
+  }
+
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
+    gap: 20px;
+  }
+
+  .card {
+    background: white;
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: 0 6px 18px rgba(0,0,0,.08);
+  }
+
+  .card h2 {
+    margin: 0;
+    font-size: 18px;
+    color: #555;
+  }
+
+  .card p {
+    font-size: 36px;
+    margin: 10px 0 0;
+    font-weight: bold;
+  }
+
+  canvas {
+    margin-top: 40px;
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+  }
+</style>
+</head>
+
+<body>
+
+<h1>📊 Dashboard บุคลากรโรงเรียน</h1>
+
+<div class="cards">
+  <div class="card"><h2>ผู้บริหาร</h2><p id="admin">-</p></div>
+  <div class="card"><h2>ข้าราชการครู</h2><p id="gov">-</p></div>
+  <div class="card"><h2>พนักงานราชการ</h2><p id="contract">-</p></div>
+  <div class="card"><h2>ครูอัตราจ้าง</h2><p id="temp">-</p></div>
+  <div class="card"><h2>บุคลากรทางการศึกษา</h2><p id="staff">-</p></div>
+</div>
+
+<canvas id="chart" height="120"></canvas>
+
+<script>
+fetch("https://script.google.com/macros/s/AKfycbwcVcXDJWibE6MCmzuwZHW8rMZsStqbFx0yoGrTy-zJxM_iXZbRycaQ1In8kSNHwa4a/exec")
+  .then(res => res.json())
+  .then(data => {
+    document.getElementById("admin").innerText = data.admin;
+    document.getElementById("gov").innerText = data.government;
+    document.getElementById("contract").innerText = data.contract;
+    document.getElementById("temp").innerText = data.temporary;
+    document.getElementById("staff").innerText = data.staff;
+
+    new Chart(document.getElementById("chart"), {
+      type: "pie",
+      data: {
+        labels: ["ผู้บริหาร","ข้าราชการ","พนักงานราชการ","ครูอัตราจ้าง","บุคลากร"],
+        datasets: [{
+          data: [
+            data.admin,
+            data.government,
+            data.contract,
+            data.temporary,
+            data.staff
+          ]
+        }]
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
